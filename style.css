@@ -93,11 +93,13 @@ body{
   border-bottom:1px solid #e6e9ef;
   background:#fff;
   padding:10px 14px 14px;
+  min-width:700px;
 }
 
 .chartBox{
   width:100%;
   height:220px;
+  min-width:672px;
 }
 
 .listRow:hover .cell{

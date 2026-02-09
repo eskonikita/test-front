@@ -15,10 +15,13 @@ const data = {
 };
 
 const tableEl = document.getElementById("table");
+const scrollEl = document.querySelector(".tableScroll");
+
 let picked = data.metrics[0].id;
 let chart = null;
 
 const nf = new Intl.NumberFormat("ru-RU");
+let lastTouchTs = 0;
 
 function fmt(v) {
   if (v === null || v === undefined) return "—";
@@ -101,6 +104,7 @@ function render() {
 
   const note = document.createElement("div");
   note.className = "footerNote";
+  note.textContent = "Клик по строке — график меняется";
   tableEl.append(note);
 
   if (chart) {
@@ -112,7 +116,9 @@ function render() {
 }
 
 function drawChart(metric) {
-  chart = Highcharts.chart("chart", {
+  const container = document.getElementById("chart");
+
+  chart = Highcharts.chart(container, {
     accessibility: { enabled: false },
     title: { text: "" },
     credits: { enabled: false },
@@ -131,9 +137,9 @@ function drawChart(metric) {
     }]
   });
 
-  setTimeout(() => {
-    if (chart) chart.reflow();
-  }, 0);
+  setTimeout(() => chart && chart.reflow(), 0);
+  setTimeout(() => chart && chart.reflow(), 60);
+  setTimeout(() => chart && chart.reflow(), 200);
 }
 
 function pickById(id) {
@@ -142,16 +148,30 @@ function pickById(id) {
   render();
 }
 
-tableEl.addEventListener("pointerup", (e) => {
+function handleTap(e) {
   const el = e.target.closest(".click");
   if (!el) return;
   pickById(el.dataset.id);
-});
+}
+
+tableEl.addEventListener("touchend", (e) => {
+  lastTouchTs = Date.now();
+  handleTap(e);
+}, { passive: true });
 
 tableEl.addEventListener("click", (e) => {
-  const el = e.target.closest(".click");
-  if (!el) return;
-  pickById(el.dataset.id);
+  if (Date.now() - lastTouchTs < 500) return;
+  handleTap(e);
 });
+
+window.addEventListener("resize", () => {
+  if (chart) chart.reflow();
+});
+
+if (scrollEl) {
+  scrollEl.addEventListener("scroll", () => {
+    if (chart) chart.reflow();
+  }, { passive: true });
+}
 
 render();
