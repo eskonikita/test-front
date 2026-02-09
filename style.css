@@ -19,8 +19,14 @@ body{
   border-radius:14px;
   overflow:hidden;
 }
+.tableScroll{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 .table{
+  min-width: 700px;
   display:grid;
   grid-template-columns: 2.2fr 1fr 1fr .6fr 1fr;
 }
@@ -90,6 +96,7 @@ body{
   grid-column: 1 / -1;
   border-bottom:1px solid #e6e9ef;
   background:#fff;
+  min-width: 700px;
   padding:10px 14px 14px;
 }
 
