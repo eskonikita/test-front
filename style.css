@@ -2,7 +2,7 @@
 
 body{
   margin:0;
-  font-family:  Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background:#f6f7fb;
   color:#20262e;
 }
@@ -19,6 +19,7 @@ body{
   border-radius:14px;
   overflow:hidden;
 }
+
 .tableScroll{
   width:100%;
   overflow-x:auto;
@@ -26,12 +27,13 @@ body{
 }
 
 .table{
-  min-width: 700px;
+  min-width:700px;
+}
+
+.row{
   display:grid;
   grid-template-columns: 2.2fr 1fr 1fr .6fr 1fr;
 }
-
-.row{ display:contents; }
 
 .cell{
   padding:12px 14px;
@@ -47,9 +49,7 @@ body{
   background:#fafbff;
 }
 
-.name{
-  font-weight:600;
-}
+.name{ font-weight:600; }
 
 .num{
   text-align:right;
@@ -72,10 +72,7 @@ body{
 
 .click{
   cursor:pointer;
-}
-
-.pick .cell{
-  border-bottom:1px solid #e6e9ef;
+  touch-action: manipulation;
 }
 
 .pickMark{
@@ -93,10 +90,8 @@ body{
 }
 
 .chartRow{
-  grid-column: 1 / -1;
   border-bottom:1px solid #e6e9ef;
   background:#fff;
-  min-width: 700px;
   padding:10px 14px 14px;
 }
 

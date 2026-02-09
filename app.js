@@ -103,51 +103,55 @@ function render() {
   note.className = "footerNote";
   tableEl.append(note);
 
-    if (chart) {
+  if (chart) {
     chart.destroy();
     chart = null;
-    }
-    drawChart(m);
-    bindClicks();
-}
+  }
 
-function bindClicks() {
-  tableEl.querySelectorAll(".click").forEach(el => {
-    el.addEventListener("click", () => {
-      const id = el.dataset.id;
-      if (!id || id === picked) return;
-      picked = id;
-      render();
-    });
-  });
+  drawChart(m);
 }
 
 function drawChart(metric) {
-  const title = metric.name;
+  chart = Highcharts.chart("chart", {
+    accessibility: { enabled: false },
+    title: { text: "" },
+    credits: { enabled: false },
+    legend: { enabled: false },
+    xAxis: { categories: data.range },
+    yAxis: { title: { text: "" } },
+    tooltip: {
+      pointFormatter: function () {
+        return `<span style="font-weight:700">${fmt(this.y)}</span>`;
+      }
+    },
+    series: [{
+      type: "line",
+      name: metric.name,
+      data: metric.series
+    }]
+  });
 
-  if (!chart) {
-    chart = Highcharts.chart("chart", {
-      title: { text: "" },
-      credits: { enabled: false },
-      legend: { enabled: false },
-      xAxis: { categories: data.range },
-      yAxis: { title: { text: "" } },
-      tooltip: {
-        pointFormatter: function () {
-          return `<span style="font-weight:700">${fmt(this.y)}</span>`;
-        }
-      },
-      series: [{
-        type: "line",
-        name: title,
-        data: metric.series
-      }]
-    });
-  } else {
-    chart.series[0].update({ name: title }, false);
-    chart.xAxis[0].setCategories(data.range, false);
-    chart.series[0].setData(metric.series, true);
-  }
+  setTimeout(() => {
+    if (chart) chart.reflow();
+  }, 0);
 }
+
+function pickById(id) {
+  if (!id || id === picked) return;
+  picked = id;
+  render();
+}
+
+tableEl.addEventListener("pointerup", (e) => {
+  const el = e.target.closest(".click");
+  if (!el) return;
+  pickById(el.dataset.id);
+});
+
+tableEl.addEventListener("click", (e) => {
+  const el = e.target.closest(".click");
+  if (!el) return;
+  pickById(el.dataset.id);
+});
 
 render();
